@@ -1,0 +1,54 @@
+input:
+  http_client:
+    url: "https://www.reddit.com/r/all/new.json"
+    verb: GET
+    oauth2:
+      enabled: true
+      client_key: ${secrets.REDDIT_CLIENT_ID}
+      client_secret: ${secrets.REDDIT_CLIENT_SECRET}
+      token_url: "https://www.reddit.com/api/v1/access_token"
+      scopes:
+        - "read"
+    headers:
+      User-Agent: "MyRedpandaBot/1.0 (by /u/chandler767)"
+    timeout: 10s
+    retry_period: 1m  
+pipeline:
+  processors:
+    - mapping: |
+        root = this.data.children.map_each(child -> {
+          "id": child.data.id,
+          "title": child.data.title,
+          "selftext": child.data.selftext,
+          "author": child.data.author,
+          "url": child.data.url,
+          "created_utc": child.data.created_utc
+        })
+
+    - unarchive:
+        format: json_array  # 
+    - cache:
+        resource: redditcachesforposts
+        operator: add
+        ttl: 36h
+        key: "${! json(\"id\") }"
+        value: ""
+    - mapping: root = if errored() { deleted() }
+
+output:
+  kafka_franz:
+    seed_brokers:
+      - "cv8f7929anc1h5oheft0.any.us-east-1.mpx.prd.cloud.redpanda.com:9092"
+    topic: news_raw
+    sasl:
+      - mechanism: SCRAM-SHA-256
+        username: ${secrets.REDACTED_USERNAME}
+        password: ${secrets.REDACTED_PASSWORD}
+    tls:
+      enabled: true
+    key: "${! json(\"id\") }"
+
+cache_resources:
+  - label: redditcachesforposts
+    type: memory
+    memory: {} 

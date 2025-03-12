@@ -1,0 +1,61 @@
+input:
+  label: "newsstream"
+  kafka_franz:
+    seed_brokers:
+      - "cv8f7929anc1h5oheft0.any.us-east-1.mpx.prd.cloud.redpanda.com:9092"
+    topics:
+      - news_raw
+    consumer_group: "newsstream_group"
+    sasl:
+      - mechanism: SCRAM-SHA-256
+        username: ${secrets.REDACTED_USERNAME}
+        password: ${secrets.REDACTED_PASSWORD}
+    tls:
+      enabled: true
+
+pipeline:
+  processors:      
+  - mapping: |
+      root = if json("url") == "" || json("title") == "" {
+        deleted()
+      } else {
+        root
+      }
+
+  - openai_chat_completion:
+      server_address: https://api.openai.com/v1
+      api_key: "${secrets.OPENAI_API_KEY}" # No default (required)
+      model: gpt-4 # No default (required)
+      prompt: |
+          Your task is to evaluate the title and link of a webpage and determine the likelihood it is fake. Decide this by looking at the text for sensational language, lack of credible sources, absence of verifiable evidence, exaggerated or unsubstantiated claims, logical inconsistencies, heavy use of emotional appeals, frequent grammar or spelling errors, reliance on anonymous or untraceable quotes, one-sided narratives, and misleading or clickbait headlines. Give each a score from 1 to 100, with 100 being absolutely fake and 1 being probably not fake. Also include one sentence explaining your reasoning.
+
+          Respond in JSON only in the format of {"result": {"id": "${!this.id}", "url": "${!this.url}", "title": "${!this.title}", "score": 50, "reason": "This is looks fake or not fake because XYZ"}}
+
+          Set score and reason based on your results.
+
+          Here is the webpage title and url:
+          ${!this.title} + ${!this.url}
+
+          Only respond in valid JSON format. Respond strictly in JSON format with no additional text before or after. Do not include ```json
+  - mapping: |
+      root = root.merge(this)
+
+  - mapping: |
+      root = if this.result.score > 50 {
+        root
+      } else {
+        deleted()
+      }
+      
+output:
+  kafka_franz:
+    seed_brokers:
+      - "cv8f7929anc1h5oheft0.any.us-east-1.mpx.prd.cloud.redpanda.com:9092"
+    topic: news_fake
+    sasl:
+      - mechanism: SCRAM-SHA-256
+        username: ${secrets.REDACTED_USERNAME}
+        password: ${secrets.REDACTED_PASSWORD}
+    tls:
+      enabled: true
+    key: "${! json(\"result.id\") }"
