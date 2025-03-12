@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="shortcut icon" type="image/png" href="favicon.png"/>
+    <link rel="manifest" href="site.webmanifest">
+
+    <title>FakeNewsStream</title>
+    <meta name="description" content="Get the latest stream of fake news.">
+    <meta name="keywords" content="fake, news, stream, streaming, latest, updates, redpanda, live, real-time">
+    <meta name="author" content="Chandler Mayo">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            <a href="https://www.redpanda.com/" target="_blank">
+                <img src="FakeNewsStream.png" alt="FakeNewsStream Logo" style="width: 100%; max-width: 200px;">
+            </a>
+            <h1 style="text-wrap: balance;">Live Streaming Fake News</h1>
+        </header>
+
+        <main>
+            <section id="loadingData" class="card">
+                <h3>Waiting for fake news data...</h3>
+            </section>
+            <section id="latestFakeNews" class="card">
+                <h2>Latest Fake News</h2>
+                <p>Title: <span id="newsTitle"></span></p>
+                <p>Fake Score: <span id="newsFakeScore"></span></p>
+                <p>URL: <span id="newsURL"></span></p>
+                <p>Description: <span id="newsDescription"></span></p>
+                <p id="newsNotesWhy">Why is it fake: <span id="newsWhy"></span></p>
+            </section>
+            <div class="view-switch" id="viewSwitch" >
+                <div class="tabs">
+                    <button id="superFakeBtn" class="tab active">Super Fake</button>
+                    <button id="maybeFakeBTn" class="tab">Maybe Fake</button>
+                </div>
+            </div>
+            <section id="superFakeStream" class="card" hidden>
+                <h2>The Super Fake News</h2>
+                <div id="superFakeStreamContainer">
+                    <!-- Content will be injected here by JavaScript -->
+                </div>
+            </section>
+            <section id="maybeFakeStream" class="card" hidden>
+                <h2>The Maybe Fake News</h2>
+                <div id="maybeFakeStreamContainer">
+                    <!-- Content will be injected here by JavaScript -->
+                </div>
+            </section>
+            <footer id="footer">
+                <p><pre>
+Made with ❤️ by <a href="http://chandlermayo.com" target="_blank">Chandler Mayo</a></pre></p>
+            </footer>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
