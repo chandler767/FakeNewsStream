@@ -12,6 +12,7 @@ import (
 	"sync"
 
 	"github.com/gorilla/websocket"
+	"github.com/joho/godotenv"
 	"github.com/twmb/franz-go/pkg/kgo"
 	"github.com/twmb/franz-go/pkg/sasl/scram"
 )
@@ -141,6 +142,10 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	// Load persisted cache.
 	loadCache()
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 
 	topic := "news_fake"
 	ctx := context.Background()
