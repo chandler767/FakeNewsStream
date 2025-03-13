@@ -6,6 +6,10 @@ body {
     color: #ffffff;
 }
 
+a {
+    overflow-wrap: break-word;
+}
+
 #app {
     max-width: 600px;
     margin: auto;
@@ -58,6 +62,27 @@ header h1 {
     border-right: 1px solid #ccc;
 }
 
+/* Basic styling for the chart container */
+#chartContainer {
+    width: 100%;
+    height: 300px;
+    /* Adjust height as needed */
+    margin: 20px 0;
+}
+
+/* Style for the canvas to fill the container */
+#fakeOMeterChart {
+    width: 100%;
+    height: 100%;
+    padding-bottom: 60px;
+}
+
+/* Rounded border line */
+hr.rounded {
+    border-top: 8px solid #bbb;
+    border-radius: 5px;
+}
+
 header {
     display: flex;
     flex-direction: column;
@@ -90,6 +115,7 @@ header {
     from {
         top: -50px;
     }
+
     to {
         top: 0;
     }

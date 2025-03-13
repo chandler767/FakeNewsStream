@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <!-- Meta tags for character encoding and viewport configuration -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,66 +20,76 @@
 
     <!-- Link to the external stylesheet -->
     <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
+    <!-- Include Chart.js library from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
     <div id="app">
-      <!-- Header section with logo and title -->
-      <header>
-        <a href="https://www.redpanda.com/" target="_blank">
-          <img src="FakeNewsStream.png" alt="FakeNewsStream Logo" style="width: 100%; max-width: 200px;" />
-        </a>
-        <h1 style="text-wrap: balance;">Live Streaming Fake News</h1>
-      </header>
+        <!-- Header section with logo and title -->
+        <header>
+            <a href="https://www.redpanda.com/" target="_blank">
+                <img src="FakeNewsStream.png" alt="FakeNewsStream Logo" style="width: 100%; max-width: 200px;" />
+            </a>
+            <h1 style="text-wrap: balance;">Live Streaming Fake News</h1>
+        </header>
 
-      <!-- Main content section -->
-      <main>
-        <!-- Loading section displayed while waiting for data -->
-        <section id="loadingData" class="card">
-          <h3>Waiting for fake news data...</h3>
-        </section>
+        <!-- Main content section -->
+        <main>
+            <!-- Loading section displayed while waiting for data -->
+            <section id="loadingData" class="card">
+                <h3>Waiting for fake news data...</h3>
+            </section>
 
-        <!-- Section for displaying the latest fake news -->
-        <section id="latestFakeNews" class="card" hidden>
-          <h2>Latest Fake News</h2>
-          <h3><span id="newsTitle"></span></h3>
-          <p>Fake Score: <span id="newsFakeScore"></span></p>
-          <p>
-            URL:
-            <a id="newsURL" href="#" target="_blank"></a>
-          </p>
-          <p id="newsNotesWhy">
-            Reason: <span id="newsReason"></span>
-          </p>
-        </section>
+            <!-- Section for displaying the latest fake news -->
+            <section id="latestFakeNews" class="card" hidden>
+                <h2>Latest Fake News</h2>
+                <h3><span id="newsTitle"></span></h3>
+                <p>Fake Score: <span id="newsFakeScore"></span></p>
+                <p>
+                    URL:
+                    <a id="newsURL" href="#" target="_blank"></a>
+                </p>
+                <p id="newsNotesWhy">
+                    Reason: <span id="newsReason"></span>
+                </p>
+                <!-- Chart container where the chart will be injected -->
+                <div id="chartContainer">
+                    <hr class="rounded">
+                    <h2>How fake is the news today?</h2>
+                    <canvas id="fakeOMeterChart"></canvas>
+                </div>
+            </section>
 
-        <!-- Section for displaying a stream of other recent fake news -->
-        <section id="superFakeStream" class="card" hidden>
-          <h2>Other Recent Fake News</h2>
-          <div id="superFakeStreamContainer">
-            <!-- Additional fake news cards will be dynamically injected here via JavaScript -->
-          </div>
-        </section>
+            <!-- Section for displaying a stream of other recent fake news -->
+            <section id="superFakeStream" class="card" hidden>
+                <h2>Other Recent Fake News</h2>
+                <div id="superFakeStreamContainer">
+                    <!-- Additional fake news cards will be dynamically injected here via JavaScript -->
+                </div>
+            </section>
 
-        <!-- Section for displaying "maybe fake" news items -->
-        <section id="maybeFakeStream" class="card" hidden>
-          <h2>The Maybe Fake News</h2>
-          <div id="maybeFakeStreamContainer">
-            <!-- Additional maybe fake news cards will be dynamically injected here via JavaScript -->
-          </div>
-        </section>
+            <!-- Section for displaying "maybe fake" news items -->
+            <section id="maybeFakeStream" class="card" hidden>
+                <h2>The Maybe Fake News</h2>
+                <div id="maybeFakeStreamContainer">
+                    <!-- Additional maybe fake news cards will be dynamically injected here via JavaScript -->
+                </div>
+            </section>
 
-        <!-- Footer section -->
-        <footer id="footer">
-          <p>
-            <pre>
+            <!-- Footer section -->
+            <footer id="footer">
+                <p>
+                <pre>
 Made with ❤️ by <a href="http://chandlermayo.com" target="_blank">Chandler Mayo</a>
             </pre>
-          </p>
-        </footer>
-      </main>
+                </p>
+            </footer>
+        </main>
     </div>
 
     <!-- Link to external JavaScript file -->
     <script src="script.js"></script>
-  </body>
+</body>
+
 </html>
