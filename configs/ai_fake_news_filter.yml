@@ -49,6 +49,8 @@ pipeline:
         prompt: |
           Your task is to evaluate the title and link of a webpage and determine the likelihood it is fake. Decide this by looking at the text for sensational language, lack of credible sources, absence of verifiable evidence, exaggerated or unsubstantiated claims, logical inconsistencies, heavy use of emotional appeals, frequent grammar or spelling errors, reliance on anonymous or untraceable quotes, one-sided narratives, and misleading or clickbait headlines. Give each a score from 1 to 100, with 100 being absolutely fake and 1 being probably not fake. Also include one sentence explaining your reasoning.
 
+          If the content is not safe for work, not work appropriate, not in english, links to an image, sexual in nature, has a gibberish or unreadable title, sales content, links to reddit, or obviously spam content it should be scored a 0. Anything that is not an article, blog, or news, should be scored a 0. The reason given for these should be "flagged - inappropriate or spam".
+
           Respond in JSON only in the format of {"result": {"id": "${!this.id}", "url": "${!this.url}", "title": "${!this.title}", "score": 50, "reason": "This is looks fake or not fake because XYZ"}}
 
           Set score and reason based on your results.
@@ -63,9 +65,9 @@ pipeline:
         root = root.merge(this)
 
     # Fourth processor: Filter messages based on the fake news score.
-    # If the score is greater than 20, keep the message; otherwise, mark it as deleted.
+    # If the score is greater than 50, keep the message; otherwise, mark it as deleted.
     - mapping: |
-        root = if this.result.score > 20 {
+        root = if this.result.score > 50 {
           root
         } else {
           deleted()
