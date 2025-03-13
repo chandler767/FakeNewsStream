@@ -30,22 +30,21 @@
             <section id="loadingData" class="card">
                 <h3>Waiting for fake news data...</h3>
             </section>
-            <section id="latestFakeNews" class="card">
+            <section id="latestFakeNews" class="card" hidden>
                 <h2>Latest Fake News</h2>
-                <p>Title: <span id="newsTitle"></span></p>
+                <h3><span id="newsTitle"></span></h3>
                 <p>Fake Score: <span id="newsFakeScore"></span></p>
-                <p>URL: <span id="newsURL"></span></p>
-                <p>Description: <span id="newsDescription"></span></p>
-                <p id="newsNotesWhy">Why is it fake: <span id="newsWhy"></span></p>
+                <p>URL: <a id="newsURL" href="#" target="_blank"></a></p>
+                <p id="newsNotesWhy">Reason: <span id="newsReason"></span></p>
             </section>
-            <div class="view-switch" id="viewSwitch" >
+            <!--<div class="view-switch" id="viewSwitch" >
                 <div class="tabs">
                     <button id="superFakeBtn" class="tab active">Super Fake</button>
                     <button id="maybeFakeBTn" class="tab">Maybe Fake</button>
                 </div>
-            </div>
+            </div>-->
             <section id="superFakeStream" class="card" hidden>
-                <h2>The Super Fake News</h2>
+                <h2>Other Recent Fake News</h2>
                 <div id="superFakeStreamContainer">
                     <!-- Content will be injected here by JavaScript -->
                 </div>
