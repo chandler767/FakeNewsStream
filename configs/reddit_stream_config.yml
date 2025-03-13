@@ -1,21 +1,40 @@
+# ----------------------------------------------------------------
+# HTTP client configuration to retrieve JSON data from Reddit.
+# ----------------------------------------------------------------
 input:
   http_client:
+    # URL to fetch the new posts from the r/all subreddit in JSON format.
     url: "https://www.reddit.com/r/all/new.json"
+    # HTTP method to use.
     verb: GET
+    # OAuth2 settings for authenticated requests.
     oauth2:
       enabled: true
+      # Client credentials for Reddit API authentication, injected from secrets.
       client_key: ${secrets.REDDIT_CLIENT_ID}
       client_secret: ${secrets.REDDIT_CLIENT_SECRET}
+      # URL to retrieve the access token.
       token_url: "https://www.reddit.com/api/v1/access_token"
+      # The scope of the access required.
       scopes:
         - "read"
+    # HTTP headers to be sent with the request.
     headers:
+      # Reddit requires a custom User-Agent string.
       User-Agent: "MyRedpandaBot/1.0 (by /u/chandler767)"
+    # Timeout for the HTTP request.
     timeout: 10s
+    # If a request fails, retry after this period.
     retry_period: 1m  
+
+# ----------------------------------------------------------------
+# Pipeline section where data is processed step-by-step.
+# ----------------------------------------------------------------
 pipeline:
   processors:
+    # First processor: Mapping data from the fetched JSON to a simpler structure.
     - mapping: |
+        # Iterates over each child element from the response and extracts selected fields.
         root = this.data.children.map_each(child -> {
           "id": child.data.id,
           "title": child.data.title,
@@ -25,30 +44,53 @@ pipeline:
           "created_utc": child.data.created_utc
         })
 
+    # Second processor: Unarchive the data using a JSON array format.
     - unarchive:
-        format: json_array  # 
+        format: json_array  # Indicates the data is in a JSON array structure.
+    
+    # Third processor: Cache processor to add data to the cache resource.
     - cache:
-        resource: redditcachesforposts
+        # 'ralldup' is the label of the cache resource defined later.
+        resource: ralldup
+        # Operator 'add' inserts new items into the cache.
         operator: add
+        # Time-to-live for each cached item (36 hours).
         ttl: 36h
+        # Key for the cache, extracting the 'id' field from the JSON.
         key: "${! json(\"id\") }"
+        # Value is set to an empty string, acting as a marker.
         value: ""
+    
+    # Fourth processor: A mapping that sets the root to deleted if any errors occurred.
     - mapping: root = if errored() { deleted() }
 
+# ----------------------------------------------------------------
+# Output configuration for sending processed data to a Kafka cluster.
+# ----------------------------------------------------------------
 output:
   kafka_franz:
+    # List of seed brokers to connect to.
     seed_brokers:
       - "cv8f7929anc1h5oheft0.any.us-east-1.mpx.prd.cloud.redpanda.com:9092"
+    # Kafka topic where the data will be published.
     topic: news_raw
+    # SASL authentication configuration for Kafka.
     sasl:
       - mechanism: SCRAM-SHA-256
         username: ${secrets.REDACTED_USERNAME}
         password: ${secrets.REDACTED_PASSWORD}
+    # TLS configuration to secure the connection.
     tls:
       enabled: true
+    # Kafka message key set to the value of the 'id' from the JSON.
     key: "${! json(\"id\") }"
 
+# ----------------------------------------------------------------
+# Cache resource definition.
+# ----------------------------------------------------------------
 cache_resources:
-  - label: redditcachesforposts
+  - label: ralldup
+    # Type of cache, in this case an in-memory cache.
     type: memory
-    memory: {} 
+    # Memory cache configuration options (empty means default configuration).
+    memory: {}
