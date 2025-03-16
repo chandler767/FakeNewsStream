@@ -6,7 +6,7 @@ FakeNewsStream is a real-time streaming application designed to detect and displ
 
 ## Demo
 
-Check out the [demo video](https://github.com/chandler767/FakeNewsStream/blob/master/Redpanda-FakeNewsDashboard-ChandlerMayo.mp4) for how to build this yourself using this code.
+Check out the [demo video](https://github.com/chandler767/FakeNewsStream/raw/refs/heads/master/Redpanda-FakeNewsDashboard-ChandlerMayo.mp4) for how to build this yourself using this code.
 
 ## Features
 
