@@ -4,6 +4,10 @@
 
 FakeNewsStream is a real-time streaming application designed to detect and display potentially fake news articles. It leverages Redpanda for message streaming, OpenAI's GPT-4 for fake news detection, and WebSockets for live updates to the frontend.
 
+## Demo
+
+Check out the [demo video](https://github.com/chandler767/FakeNewsStream/blob/master/Redpanda-FakeNewsDashboard-ChandlerMayo.mp4) for how to build this yourself using this code.
+
 ## Features
 
 - **Real-time Data Streaming**: Fetches new posts from Reddit and processes them in real-time.
